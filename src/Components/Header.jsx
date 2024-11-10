@@ -2,6 +2,7 @@ import React from "react";
 import { FaAirbnb } from "react-icons/fa";
 import { CiSearch } from "react-icons/ci";
 import { FaBars, FaUserCircle } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const SearchOption = ({ label, subLabel }) => (
   <div className="flex flex-col justify-center font-sans px-4 py-2 rounded-full cursor-pointer hover:bg-gray-300 hover:px-5 hover:py-2.5">
@@ -46,12 +47,15 @@ function Header() {
         </div>
 
         {/* Login Part */}
-        <div className="flex gap-2 items-center border border-gray-300 shadow-md rounded-full px-4">
+        <Link
+          to={"/login"}
+          className="flex gap-2 items-center border border-gray-300 shadow-md rounded-full px-4"
+        >
           <FaBars className="text-md" />
           <div className="text-3xl text-gray-500 rounded-full">
             <FaUserCircle />
           </div>
-        </div>
+        </Link>
       </header>
     </div>
   );
