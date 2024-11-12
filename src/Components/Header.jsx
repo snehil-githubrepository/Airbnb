@@ -14,7 +14,7 @@ const SearchOption = ({ label, subLabel }) => (
 function Header() {
   return (
     <div>
-      <header className="flex justify-around p-3 shadow-md bg-white">
+      <header className="flex justify-around p-3 bg-white">
         {/* Logo Part */}
         <a
           href="/"
