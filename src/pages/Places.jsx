@@ -38,6 +38,10 @@ function Places() {
     }));
   };
 
+  const uploadPhoto = (e) => {
+    const files = e.target.files;
+  }
+
   return (
     <div>
       {action !== "new" && (
@@ -84,7 +88,8 @@ function Places() {
               <button className="bg-gray-200 px-4 rounded-2xl">Add</button>
             </div>
             <div className="mt-2 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-              <button className="flex justify-center gap-1 border bg-transparent rounded-2xl p-8 text-2xl text-gray-600">
+              <label className="cursor-pointer flex justify-center gap-1 border bg-transparent rounded-2xl p-8 text-2xl text-gray-600">
+                <input type="file" className="hidden" onChange={uploadPhoto} />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -100,7 +105,7 @@ function Places() {
                   />
                 </svg>
                 Upload
-              </button>
+              </label>
             </div>
             {inputHeader("Description")}
             <textarea
