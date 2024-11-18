@@ -2,11 +2,22 @@ import React from "react";
 import { FaSwimmingPool } from "react-icons/fa";
 import { MdOutlinePets } from "react-icons/md";
 
-function Perks({selected, onChange}) {
+function Perks({ selected, onChange }) {
+  const handleCbClick = (ev) => {
+    //to check input selected or not
+    //ev.target.checked
+    const { checked, name } = ev.target;
+
+    if (checked) {
+      onChange([...selected, name]);
+    } else {
+      onChange([...selected.filter((selectedName) => selectedName !== name)]);
+    }
+  };
   return (
     <>
       <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
-        <input type="checkbox" />
+        <input type="checkbox" name="wifi" onChange={handleCbClick} />
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -24,7 +35,7 @@ function Perks({selected, onChange}) {
         <span>Wifi</span>
       </label>
       <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
-        <input type="checkbox" />
+        <input type="checkbox" name="parking" onChange={handleCbClick} />
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -42,7 +53,7 @@ function Perks({selected, onChange}) {
         <span>Free Parking Spot</span>
       </label>
       <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
-        <input type="checkbox" />
+        <input type="checkbox" name="TV" onChange={handleCbClick} />
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -60,12 +71,12 @@ function Perks({selected, onChange}) {
         <span>TV</span>
       </label>
       <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
-        <input type="checkbox" />
+        <input type="checkbox" name="pets" onChange={handleCbClick} />
         <MdOutlinePets className="size-6 text-gray-600" />
         <span>Pets</span>
       </label>
       <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
-        <input type="checkbox" />
+        <input type="checkbox" name="pool" onChange={handleCbClick} />
         <FaSwimmingPool className="size-6 text-gray-600" />
         <span>Swimming Pool</span>
       </label>
