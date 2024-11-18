@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import Perks from "../Components/Perks";
 
 function Places() {
   const { action } = useParams();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -21,9 +22,7 @@ function Places() {
 
   const [savedPlaces, setSavedPlaces] = useState([]);
 
-  const inputHeader = (text) => {
-    return <h2 className="text-2xl">{text}</h2>;
-  };
+  const inputHeader = (text) => <h2 className="text-2xl">{text}</h2>;
 
   const handlePerksChange = (newPerks) => {
     setFormData((prevData) => ({
@@ -36,24 +35,22 @@ function Places() {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: name === "maxGuests" ? Number(value) : value, // Convert to number if maxGuests
+      [name]: name === "maxGuests" ? Number(value) : value,
     }));
   };
 
   const uploadPhoto = (e) => {
     const files = e.target.files;
     const uploadedPhotos = [];
-
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       const localUrl = URL.createObjectURL(file);
       uploadedPhotos.push({
-        id: `${file.name}-${Date.now()}-${i}`, // Unique identifier
+        id: `${file.name}-${Date.now()}-${i}`,
         name: file.name,
         url: localUrl,
       });
     }
-
     setFormData((prev) => ({
       ...prev,
       addedPhotos: [...prev.addedPhotos, ...uploadedPhotos],
@@ -75,7 +72,11 @@ function Places() {
       return;
     }
 
-    setSavedPlaces((prevPlaces) => [...prevPlaces, formData]);
+    setSavedPlaces((prevPlaces) => {
+      const newPlaces = [...prevPlaces, formData];
+      navigate("/account/places", { state: { places: newPlaces } });
+      return newPlaces;
+    });
 
     setFormData({
       title: "",
@@ -89,8 +90,6 @@ function Places() {
       checkout: "",
       maxGuests: 1,
     });
-
-    console.log("Saved Places:", savedPlaces);
   };
 
   return (
@@ -99,12 +98,35 @@ function Places() {
         <div>
           <div className="text-center">
             <Link
-              className="inline-flex gap-1 mt-10 w-1/8 items-center p-2 bg-red-400 text-white py-2 px-6 rounded-2xl "
+              className="inline-flex gap-1 mt-10 w-1/8 items-center p-2 bg-red-400 text-white py-2 px-6 rounded-2xl"
               to="/account/places/new"
             >
               <FaPlus />
               Add New Place
             </Link>
+          </div>
+          <div className="mt-4">
+            {savedPlaces.map((place, index) => (
+              <div
+                key={index}
+                className="flex items-center border p-4 rounded-xl gap-4 mb-4"
+              >
+                <div className="w-20 h-20 bg-gray-200 flex-shrink-0">
+                  {place.addedPhotos.length > 0 && (
+                    <img
+                      src={place.addedPhotos[0].url}
+                      alt={place.title}
+                      className="w-full h-full object-cover rounded-xl"
+                    />
+                  )}
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold">{place.title}</h3>
+                  <p className="text-sm text-gray-500">{place.address}</p>
+                  <p className="text-sm text-gray-700">{place.description}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}
@@ -117,7 +139,7 @@ function Places() {
               name="title"
               value={formData.title}
               onChange={handleInputChange}
-              placeholder="Title: for eg. My Lovely Apartment"
+              placeholder="Title: e.g., My Lovely Apartment"
             />
             {inputHeader("Address")}
             <input
@@ -134,7 +156,7 @@ function Places() {
                 name="photoLink"
                 value={formData.photoLink}
                 onChange={handleInputChange}
-                placeholder={"Add using a Link"}
+                placeholder="Add using a link"
               />
               <button className="bg-gray-200 px-4 rounded-2xl">Add</button>
             </div>
@@ -157,11 +179,9 @@ function Places() {
                 </svg>
                 Upload
               </label>
-
-              {/* Uploaded Photos */}
               {formData.addedPhotos.map((photo) => (
                 <div
-                  key={photo.id} // Use stable, unique key
+                  key={photo.id}
                   className="relative border rounded-2xl overflow-hidden h-32 flex items-center justify-center"
                 >
                   <img
@@ -172,7 +192,6 @@ function Places() {
                   <button
                     onClick={() => removePhoto(photo.id)}
                     className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full"
-                    title="Remove photo"
                   >
                     ✕
                   </button>
@@ -228,7 +247,7 @@ function Places() {
                 />
               </div>
             </div>
-            <button className="primary my-4">save</button>
+            <button className="primary my-4">Save</button>
           </form>
         </div>
       )}
