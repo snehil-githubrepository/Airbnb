@@ -19,6 +19,8 @@ function Places() {
     maxGuests: 1,
   });
 
+  const [savedPlaces, setSavedPlaces] = useState([]);
+
   const inputHeader = (text) => {
     return <h2 className="text-2xl">{text}</h2>;
   };
@@ -40,7 +42,56 @@ function Places() {
 
   const uploadPhoto = (e) => {
     const files = e.target.files;
-  }
+    const uploadedPhotos = [];
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const localUrl = URL.createObjectURL(file);
+      uploadedPhotos.push({
+        id: `${file.name}-${Date.now()}-${i}`, // Unique identifier
+        name: file.name,
+        url: localUrl,
+      });
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      addedPhotos: [...prev.addedPhotos, ...uploadedPhotos],
+    }));
+  };
+
+  const removePhoto = (photoId) => {
+    setFormData((prev) => ({
+      ...prev,
+      addedPhotos: prev.addedPhotos.filter((photo) => photo.id !== photoId),
+    }));
+  };
+
+  const addNewPlace = (e) => {
+    e.preventDefault();
+
+    if (!formData.title || !formData.address) {
+      alert("Title and Address are required!");
+      return;
+    }
+
+    setSavedPlaces((prevPlaces) => [...prevPlaces, formData]);
+
+    setFormData({
+      title: "",
+      address: "",
+      addedPhotos: [],
+      photoLink: "",
+      description: "",
+      perks: [],
+      extraInfo: "",
+      checkIn: "",
+      checkout: "",
+      maxGuests: 1,
+    });
+
+    console.log("Saved Places:", savedPlaces);
+  };
 
   return (
     <div>
@@ -59,7 +110,7 @@ function Places() {
       )}
       {action === "new" && (
         <div>
-          <form>
+          <form onSubmit={addNewPlace}>
             {inputHeader("Title")}
             <input
               type="text"
@@ -87,7 +138,7 @@ function Places() {
               />
               <button className="bg-gray-200 px-4 rounded-2xl">Add</button>
             </div>
-            <div className="mt-2 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+            <div className="mt-2 gap-2 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
               <label className="cursor-pointer flex justify-center gap-1 border bg-transparent rounded-2xl p-8 text-2xl text-gray-600">
                 <input type="file" className="hidden" onChange={uploadPhoto} />
                 <svg
@@ -106,6 +157,27 @@ function Places() {
                 </svg>
                 Upload
               </label>
+
+              {/* Uploaded Photos */}
+              {formData.addedPhotos.map((photo) => (
+                <div
+                  key={photo.id} // Use stable, unique key
+                  className="relative border rounded-2xl overflow-hidden h-32 flex items-center justify-center"
+                >
+                  <img
+                    src={photo.url}
+                    alt={photo.name}
+                    className="object-cover w-full h-full"
+                  />
+                  <button
+                    onClick={() => removePhoto(photo.id)}
+                    className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full"
+                    title="Remove photo"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
             </div>
             {inputHeader("Description")}
             <textarea
