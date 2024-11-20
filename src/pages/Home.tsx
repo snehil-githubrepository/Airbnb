@@ -1,8 +1,15 @@
 import React from "react";
 import PlaceCard from "../Components/PlaceCard";
 
+interface Place {
+  title: string;
+  description: string;
+  image: string;
+  price: string;
+}
+
 function Index() {
-  const places = [
+  const places: Place[] = [
     {
       title: "Cozy Apartment in NYC",
       description: "A modern apartment in the heart of New York City.",
