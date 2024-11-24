@@ -7,7 +7,18 @@ function Places() {
   const { action } = useParams();
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    title: string;
+    address: string;
+    addedPhotos: any[];
+    photoLink: string;
+    description: string;
+    perks: any[];
+    extraInfo: string;
+    checkIn: string;
+    checkout: string;
+    maxGuests: number;
+  }>({
     title: "",
     address: "",
     addedPhotos: [],
@@ -20,18 +31,20 @@ function Places() {
     maxGuests: 1,
   });
 
-  const [savedPlaces, setSavedPlaces] = useState([]);
+  const [savedPlaces, setSavedPlaces] = useState<any[]>([]);
 
-  const inputHeader = (text) => <h2 className="text-2xl">{text}</h2>;
+  const inputHeader = (text: string) => <h2 className="text-2xl">{text}</h2>;
 
-  const handlePerksChange = (newPerks) => {
+  const handlePerksChange = (newPerks: any) => {
     setFormData((prevData) => ({
       ...prevData,
       perks: newPerks,
     }));
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -39,7 +52,7 @@ function Places() {
     }));
   };
 
-  const uploadPhoto = (e) => {
+  const uploadPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     const uploadedPhotos = [];
     for (let i = 0; i < files.length; i++) {
@@ -57,14 +70,14 @@ function Places() {
     }));
   };
 
-  const removePhoto = (photoId) => {
+  const removePhoto = (photoId: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({
       ...prev,
       addedPhotos: prev.addedPhotos.filter((photo) => photo.id !== photoId),
     }));
   };
 
-  const addNewPlace = (e) => {
+  const addNewPlace = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!formData.title || !formData.address) {
